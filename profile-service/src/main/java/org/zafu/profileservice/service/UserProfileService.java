@@ -11,6 +11,8 @@ import org.zafu.profileservice.entity.UserProfile;
 import org.zafu.profileservice.mapper.UserProfileMapper;
 import org.zafu.profileservice.repo.UserProfileRepo;
 
+import java.util.List;
+
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
@@ -28,5 +30,12 @@ public class UserProfileService {
     public UserProfileResponse getProfile(String id){
         UserProfile userProfile = userProfileRepo.findById(id).orElseThrow(()-> new RuntimeException("Profile not found!"));
         return mapper.toUserProfilerResponse(userProfile);
+    }
+
+    public List<UserProfileResponse> getAllProfiles(){
+        return userProfileRepo.findAll()
+                .stream()
+                .map(mapper::toUserProfilerResponse)
+                .toList();
     }
 }

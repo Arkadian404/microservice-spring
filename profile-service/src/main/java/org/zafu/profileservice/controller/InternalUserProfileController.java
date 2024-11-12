@@ -8,21 +8,14 @@ import org.zafu.profileservice.dto.request.UserProfileRequest;
 import org.zafu.profileservice.dto.response.UserProfileResponse;
 import org.zafu.profileservice.service.UserProfileService;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class UserProfileController {
+public class InternalUserProfileController {
     UserProfileService userProfileService;
 
-    @GetMapping("/users")
-    public List<UserProfileResponse> getProfiles(){
-        return userProfileService.getAllProfiles();
-    }
-
-    @GetMapping("/users/{id}")
-    public UserProfileResponse getProfile(@PathVariable String id){
-        return userProfileService.getProfile(id);
+    @PostMapping("/internal/users")
+    public UserProfileResponse createProfile(@RequestBody UserProfileRequest request){
+        return userProfileService.createProfile(request);
     }
 }

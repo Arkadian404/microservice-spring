@@ -22,7 +22,7 @@ public class UserProfile {
     @GeneratedValue(generatorClass = UUIDStringGenerator.class)
     String id;
     @Property("userId")
-    String userId;
+    Long userId;
 
     String firstname;
     String lastname;
