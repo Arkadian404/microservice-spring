@@ -3,11 +3,9 @@ package org.zafu.postservice.controller;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.zafu.postservice.dto.ApiResponse;
+import org.zafu.postservice.dto.PageResponse;
 import org.zafu.postservice.dto.request.PostRequest;
 import org.zafu.postservice.dto.response.PostResponse;
 import org.zafu.postservice.service.PostService;
@@ -36,9 +34,12 @@ public class PostController {
     }
 
     @GetMapping("/my-posts")
-    public ApiResponse<List<PostResponse>> getMyPosts(){
-        return ApiResponse.<List<PostResponse>>builder()
-                .result(postService.getMyPost())
+    public ApiResponse<PageResponse<PostResponse>> getMyPosts(
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size
+    ){
+        return ApiResponse.<PageResponse<PostResponse>>builder()
+                .result(postService.getMyPost(page, size))
                 .build();
     }
     
