@@ -9,3 +9,8 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/post-service?authSource=admin
+
+
+app:
+  services:
+    profile: http://localhost:8081/profile

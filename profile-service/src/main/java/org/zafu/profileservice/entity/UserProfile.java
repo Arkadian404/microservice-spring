@@ -23,7 +23,8 @@ public class UserProfile {
     String id;
     @Property("userId")
     Long userId;
-
+    @Property("username")
+    String username;
     String firstname;
     String lastname;
     LocalDate dob;

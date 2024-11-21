@@ -1,5 +1,6 @@
 package org.zafu.postservice.service;
 
+import feign.FeignException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -13,9 +14,11 @@ import org.springframework.stereotype.Service;
 import org.zafu.postservice.dto.PageResponse;
 import org.zafu.postservice.dto.request.PostRequest;
 import org.zafu.postservice.dto.response.PostResponse;
+import org.zafu.postservice.dto.response.UserProfileResponse;
 import org.zafu.postservice.entity.Post;
 import org.zafu.postservice.mapper.PostMapper;
 import org.zafu.postservice.repo.PostRepo;
+import org.zafu.postservice.repo.httpclient.ProfileClient;
 
 import java.time.Instant;
 
@@ -27,6 +30,7 @@ import java.time.Instant;
 public class PostService {
     PostRepo postRepo;
     PostMapper mapper;
+    ProfileClient profileClient;
     CustomDateTimeFormatter formatter;
 
     public PostResponse createPost(PostRequest request){
@@ -44,12 +48,20 @@ public class PostService {
     public PageResponse<PostResponse> getMyPost(int page, int size){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = Long.valueOf(authentication.getName());
+        UserProfileResponse userProfile = null;
+        try{
+            userProfile = profileClient.getUserProfile(userId).getResult();
+        }catch (FeignException ex){
+            ex.printStackTrace();
+        }
+        String username = userProfile != null ? userProfile.getUsername() : "Unknown";
         Sort sort = Sort.by("createdDate").descending();
         Pageable pageable = PageRequest.of(page-1, size, sort);
         var pageData = postRepo.findAllByUserId(userId, pageable);
         var postList = pageData.getContent().stream().map(post ->{
             var postResponse = mapper.toPostResponse(post);
             postResponse.setCreated(formatter.format(postResponse.getCreatedDate()));
+            postResponse.setUsername(username);
             return postResponse;
         }).toList();
         return PageResponse.<PostResponse>builder()

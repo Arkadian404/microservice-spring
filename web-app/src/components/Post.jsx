@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import {Avatar, Typography} from "@mui/material";
 
 const Post = forwardRef((props, ref) => {
-    const { avatarUrl, username, createdDate, content } = props.post;
+    const { avatarUrl, username, created, content } = props.post;
     return (
         <Box
             ref={ref}
@@ -39,7 +39,7 @@ const Post = forwardRef((props, ref) => {
                                 fontWeight: 400,
                             }}
                         >
-                            {createdDate}
+                            {created}
                         </Typography>
                     </Box>
                     <Typography

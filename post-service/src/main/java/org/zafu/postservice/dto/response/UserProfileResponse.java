@@ -1,4 +1,5 @@
-package org.zafu.profileservice.dto.request;
+package org.zafu.postservice.dto.response;
+
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -10,7 +11,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserProfileRequest {
+public class UserProfileResponse {
+    String id;
     Long userId;
     String username;
     String firstname;

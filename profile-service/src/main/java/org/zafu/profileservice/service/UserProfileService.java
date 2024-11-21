@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.zafu.profileservice.dto.request.UserProfileRequest;
 import org.zafu.profileservice.dto.response.UserProfileResponse;
 import org.zafu.profileservice.entity.UserProfile;
+import org.zafu.profileservice.exception.AppException;
+import org.zafu.profileservice.exception.ErrorCode;
 import org.zafu.profileservice.mapper.UserProfileMapper;
 import org.zafu.profileservice.repo.UserProfileRepo;
 
@@ -29,7 +31,12 @@ public class UserProfileService {
     }
 
     public UserProfileResponse getProfile(String id){
-        UserProfile userProfile = userProfileRepo.findById(id).orElseThrow(()-> new RuntimeException("Profile not found!"));
+        UserProfile userProfile = userProfileRepo.findById(id).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
+        return mapper.toUserProfilerResponse(userProfile);
+    }
+
+    public UserProfileResponse getUserProfileByUserId(Long userId){
+        UserProfile userProfile = userProfileRepo.findByUserId(userId).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
         return mapper.toUserProfilerResponse(userProfile);
     }
 
