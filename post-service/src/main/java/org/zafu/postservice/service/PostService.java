@@ -18,7 +18,6 @@ import org.zafu.postservice.mapper.PostMapper;
 import org.zafu.postservice.repo.PostRepo;
 
 import java.time.Instant;
-import java.util.List;
 
 
 @Service
@@ -28,6 +27,7 @@ import java.util.List;
 public class PostService {
     PostRepo postRepo;
     PostMapper mapper;
+    CustomDateTimeFormatter formatter;
 
     public PostResponse createPost(PostRequest request){
         var auth = SecurityContextHolder.getContext().getAuthentication();
@@ -47,13 +47,17 @@ public class PostService {
         Sort sort = Sort.by("createdDate").descending();
         Pageable pageable = PageRequest.of(page-1, size, sort);
         var pageData = postRepo.findAllByUserId(userId, pageable);
+        var postList = pageData.getContent().stream().map(post ->{
+            var postResponse = mapper.toPostResponse(post);
+            postResponse.setCreated(formatter.format(postResponse.getCreatedDate()));
+            return postResponse;
+        }).toList();
         return PageResponse.<PostResponse>builder()
                 .currentPage(page)
                 .pageSize(pageData.getSize())
                 .totalPages(pageData.getTotalPages())
                 .totalElements(pageData.getTotalElements())
-                .data(pageData.getContent()
-                        .stream().map(mapper::toPostResponse).toList())
+                .data(postList)
                 .build();
 
     }

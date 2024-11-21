@@ -20,6 +20,7 @@ public class Post {
     String id;
     Long userId;
     String content;
+    String created;
     Instant createdDate;
     Instant modifiedDate;
 }

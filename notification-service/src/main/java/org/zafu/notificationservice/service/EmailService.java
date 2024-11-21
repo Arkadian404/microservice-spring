@@ -25,7 +25,7 @@ import java.util.List;
 public class EmailService {
     EmailClient emailClient;
 
-    @Value("${notification.email.brev-apikey}")
+    @Value("${notification.email.brevo-apikey}")
     @NonFinal
     String apiKey;
 
